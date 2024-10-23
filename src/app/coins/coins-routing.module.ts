@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CoinListComponent } from './components/coin-list/coin-list.component';
 
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./coins/coins.module').then(m => m.CoinsModule),
+    component: CoinListComponent,
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class CoinsRoutingModule {}

@@ -1,1 +1,3 @@
-<p>coin-list works!</p>
+<div *ngFor="let coin of coins$ | async">
+  <p>{{ coin.symbol }}: {{ coin.priceUsd }}</p>
+</div>
