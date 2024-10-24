@@ -1,13 +1,8 @@
 import { createReducer, on } from '@ngrx/store';
-import { ICoin } from '../../shared/models/coin-response.model';
 import * as CoinsActions from '../actions/coins.actions';
+import { ICoinState } from '../state.model';
 
-export interface CoinState {
-  coins: ICoin[];
-  error: string | null;
-}
-
-export const initialState: CoinState = {
+export const initialState: ICoinState = {
   coins: [],
   error: null,
 };

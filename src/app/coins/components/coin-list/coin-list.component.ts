@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CoinService } from '../../services/coin.service';
 import { Observable } from 'rxjs';
 import { ICoin } from '../../../shared/models/coin-response.model';
+import { Store } from '@ngrx/store';
+import * as CoinsActions from '../../../redux/actions/coins.actions';
+import * as fromCoinsSelectors from '../../../redux/selectors/coins.selectors';
 
 @Component({
   selector: 'app-coin-list',
@@ -9,11 +11,13 @@ import { ICoin } from '../../../shared/models/coin-response.model';
   styleUrl: './coin-list.component.scss',
 })
 export class CoinListComponent implements OnInit {
-  public coins$!: Observable<ICoin[]>;
+  public coins$: Observable<ICoin[]> = this.store.select(
+    fromCoinsSelectors.selectAllCoins
+  );
 
-  constructor(private coinService: CoinService) {}
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.coins$ = this.coinService.getCoins();
+    this.store.dispatch(CoinsActions.loadCoins({ limit: 10, offset: 0 }));
   }
 }
