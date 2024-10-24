@@ -32,20 +32,20 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let asset of coins$ | async">
-      <td>{{ asset.symbol }}</td>
+    <tr *ngFor="let coin of coins$ | async" (click)="navigateToCoin(coin.id)">
+      <td>{{ coin.symbol }}</td>
       <td>
         <img
-          [src]="getIconUrl(asset.symbol)"
-          alt="{{ asset.symbol }}"
+          [src]="getIconUrl(coin.symbol)"
+          alt="{{ coin.symbol }}"
           width="32" />
       </td>
-      <td>{{ formatPrice(asset.priceUsd) }}</td>
-      <td>{{ formatPrice(asset.marketCapUsd) }}</td>
+      <td>{{ formatPrice(coin.priceUsd) }}</td>
+      <td>{{ formatPrice(coin.marketCapUsd) }}</td>
       <td>
         {{
-          asset.changePercent24Hr !== null
-            ? (asset.changePercent24Hr | number: '1.2-2') + '%'
+          coin.changePercent24Hr !== null
+            ? (coin.changePercent24Hr | number: '1.2-2') + '%'
             : 'n/a'
         }}
       </td>

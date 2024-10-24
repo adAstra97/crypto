@@ -6,11 +6,12 @@ import * as fromCoinsSelectors from '../../../redux/selectors/coins.selectors';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CoinService } from '../../services/coin.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-coin-list',
   templateUrl: './coin-list.component.html',
-  styleUrls: ['./coin-list.component.scss'],
+  styleUrl: './coin-list.component.scss',
 })
 export class CoinListComponent implements OnInit {
   private searchSubject = new Subject<string>();
@@ -26,6 +27,7 @@ export class CoinListComponent implements OnInit {
 
   constructor(
     private store: Store,
+    private router: Router,
     private coinService: CoinService
   ) {}
 
@@ -119,5 +121,9 @@ export class CoinListComponent implements OnInit {
 
   public addToPortfolio(coin: ICoin): void {
     console.log('Added to portfolio:', coin);
+  }
+
+  public navigateToCoin(coinId: string): void {
+    this.router.navigate(['/coin', coinId]);
   }
 }
