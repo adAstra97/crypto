@@ -5,7 +5,7 @@ const actionSource = '[CoinCap API]';
 
 export const loadCoins = createAction(
   `${actionSource} Load Coins`,
-  props<{ limit: number; offset: number }>()
+  props<{ limit: number; offset: number; search?: string }>()
 );
 export const loadCoinsSuccess = createAction(
   `${actionSource} Load Coins Success`,

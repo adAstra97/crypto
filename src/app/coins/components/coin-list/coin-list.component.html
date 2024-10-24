@@ -1,67 +1,45 @@
-<div class="table-container">
-  <mat-form-field appearance="fill">
-    <mat-label>Search Coin</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Bitcoin" />
-  </mat-form-field>
+<div>
+  <input
+    type="text"
+    placeholder="Search by name or symbol"
+    (input)="onSearch($event)" />
+</div>
 
-  <table mat-table [dataSource]="dataSource" matSort>
-    <!-- Logo Column -->
-    <ng-container matColumnDef="logo">
-      <th mat-header-cell *matHeaderCellDef>Logo</th>
-      <td mat-cell *matCellDef="let element">
+<table>
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Logo</th>
+      <th>Price (USD)</th>
+      <th>Market Cap (USD)</th>
+      <th>Change (24h)</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let asset of coins$ | async">
+      <td>{{ asset.symbol }}</td>
+      <td>
         <img
-          [src]="getIconUrl(element.symbol)"
-          alt="{{ element.symbol }} logo"
+          [src]="getIconUrl(asset.symbol)"
+          alt="{{ asset.symbol }}"
           width="32" />
       </td>
-    </ng-container>
-
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="symbol">
-      <th mat-header-cell *matHeaderCellDef>Symbol</th>
-      <td mat-cell *matCellDef="let element">{{ element.symbol }}</td>
-    </ng-container>
-
-    <!-- Price Column -->
-    <ng-container matColumnDef="priceUsd">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Price (USD)</th>
-      <td mat-cell *matCellDef="let element">
-        {{ formatPrice(element.priceUsd) }}
+      <td>{{ formatPrice(asset.priceUsd) }}</td>
+      <td>{{ formatPrice(asset.marketCapUsd) }}</td>
+      <td>
+        {{
+          asset.changePercent24Hr !== null
+            ? (asset.changePercent24Hr | number: '1.2-2') + '%'
+            : 'n/a'
+        }}
       </td>
-    </ng-container>
+      <td><button>Add</button></td>
+    </tr>
+  </tbody>
+</table>
 
-    <!-- Market Cap Column -->
-    <ng-container matColumnDef="marketCapUsd">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        Market Cap (USD)
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ formatPrice(element.marketCapUsd) }}
-      </td>
-    </ng-container>
-
-    <!-- Change Percent Column -->
-    <ng-container matColumnDef="changePercent24Hr">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Change (24h)</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.changePercent24Hr | number: '1.2-2' }}%
-      </td>
-    </ng-container>
-
-    <!-- Add to Portfolio Column -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-button (click)="addToPortfolio(element)">Add</button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-
-  <mat-paginator
-    [length]="100"
-    [pageSize]="10"
-    (page)="onPageChange($event)"></mat-paginator>
+<div class="pagination">
+  <button (click)="onPreviousPage()" [disabled]="isFirstPage">Prev</button>
+  <button (click)="onNextPage()" [disabled]="isLastPage">Next</button>
 </div>

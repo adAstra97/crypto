@@ -1,55 +1,103 @@
-import { MatTableDataSource } from '@angular/material/table';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ICoin } from '../../../shared/models/coin-response.model';
 import * as CoinsActions from '../../../redux/actions/coins.actions';
 import * as fromCoinsSelectors from '../../../redux/selectors/coins.selectors';
-import { PageEvent } from '@angular/material/paginator';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { CoinService } from '../../services/coin.service';
 
 @Component({
   selector: 'app-coin-list',
   templateUrl: './coin-list.component.html',
-  styleUrl: './coin-list.component.scss',
+  styleUrls: ['./coin-list.component.scss'],
 })
 export class CoinListComponent implements OnInit {
-  public displayedColumns: string[] = [
-    'logo',
-    'symbol',
-    'priceUsd',
-    'marketCapUsd',
-    'changePercent24Hr',
-    'actions',
-  ];
-  public dataSource = new MatTableDataSource();
+  private searchSubject = new Subject<string>();
 
-  constructor(private store: Store) {}
+  public coins$ = this.store.select(fromCoinsSelectors.selectAllCoins);
+  public searchQuery = '';
+  public currentOffset = 0;
+  public pageSize = 10;
+  public totalCoins = 0;
+
+  constructor(
+    private store: Store,
+    private coinService: CoinService
+  ) {}
 
   ngOnInit(): void {
-    this.loadData(10, 0);
+    this.loadData();
+    this.loadTotalCoins();
+
+    this.searchSubject
+      .pipe(debounceTime(500), distinctUntilChanged())
+      .subscribe(searchQuery => {
+        this.searchQuery = searchQuery;
+        this.currentOffset = 0;
+        this.loadData();
+        this.loadTotalCoins(searchQuery);
+      });
   }
 
-  private loadData(limit: number, offset: number): void {
-    this.store.dispatch(CoinsActions.loadCoins({ limit, offset }));
-    this.store.select(fromCoinsSelectors.selectAllCoins).subscribe(data => {
-      this.dataSource.data = data.coins;
+  private loadData(): void {
+    this.store.dispatch(
+      CoinsActions.loadCoins({
+        limit: this.pageSize,
+        offset: this.currentOffset,
+        search: this.searchQuery,
+      })
+    );
+  }
+
+  private loadTotalCoins(value?: string): void {
+    this.coinService.getTotalCoins(value).subscribe(total => {
+      this.totalCoins = total;
     });
   }
 
-  public applyFilter(event: Event): void {
+  public onSearch(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.searchSubject.next(filterValue);
   }
 
   public getIconUrl(symbol: string): string {
     return `https://assets.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png`;
   }
 
-  public formatPrice(price: number): string {
-    return String(price);
+  public formatPrice(price: string): string {
+    const priceToDigit = +price;
+    const fixedDigit = priceToDigit.toFixed(2);
+
+    if (fixedDigit == '0.00') return '0.01';
+
+    if (priceToDigit > 1e9) return (priceToDigit / 1e9).toFixed(2) + 'b';
+    if (priceToDigit > 1e6) return (priceToDigit / 1e6).toFixed(2) + 'm';
+    if (priceToDigit > 1e3) return (priceToDigit / 1e3).toFixed(2) + 'k';
+
+    return priceToDigit.toFixed(2);
   }
 
-  public onPageChange(event: PageEvent): void {
-    this.loadData(event.pageSize, event.pageIndex * event.pageSize);
+  public get isFirstPage(): boolean {
+    return this.currentOffset === 0;
+  }
+
+  public get isLastPage(): boolean {
+    return this.currentOffset + this.pageSize >= this.totalCoins;
+  }
+
+  public onPreviousPage(): void {
+    if (!this.isFirstPage) {
+      this.currentOffset -= this.pageSize;
+      this.loadData();
+    }
+  }
+
+  public onNextPage(): void {
+    if (!this.isLastPage) {
+      this.currentOffset += this.pageSize;
+      this.loadData();
+    }
   }
 
   public addToPortfolio(coin: ICoin): void {

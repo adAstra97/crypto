@@ -4,7 +4,7 @@ export interface ICoin {
   symbol: string;
   name: string;
   supply: string;
-  maxSupply: string | null; // Can be null
+  maxSupply: string | null;
   marketCapUsd: string;
   volumeUsd24Hr: string;
   priceUsd: string;

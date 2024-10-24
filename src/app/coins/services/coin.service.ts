@@ -10,15 +10,35 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CoinService {
-  private readonly API_URL = 'https://api.coincap.io/v2';
+  private readonly API_URL = 'https://api.coincap.io/v2/assets';
 
   constructor(private http: HttpClient) {}
 
-  getCoins(limit = 10, offset = 0): Observable<ICoin[]> {
+  public getCoins(
+    limit = 10,
+    offset = 0,
+    search?: string
+  ): Observable<ICoin[]> {
+    let queryParams = `limit=${limit}&offset=${offset}`;
+
+    if (search) {
+      queryParams += `&search=${search}`;
+    }
+
     return this.http
-      .get<ICoinResponse>(
-        `${this.API_URL}/assets?limit=${limit}&offset=${offset}`
-      )
+      .get<ICoinResponse>(`${this.API_URL}?${queryParams}`)
       .pipe(map(response => response.data));
+  }
+
+  public getTotalCoins(search?: string): Observable<number> {
+    let queryParams = '';
+
+    if (search) {
+      queryParams += `&search=${search}`;
+    }
+
+    return this.http
+      .get<ICoinResponse>(`${this.API_URL}?${queryParams}`)
+      .pipe(map(response => response?.data?.length || 0));
   }
 }

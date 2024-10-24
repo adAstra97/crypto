@@ -11,10 +11,12 @@ export class CoinsEffects {
     this.actions$.pipe(
       ofType(CoinsActions.loadCoins),
       mergeMap(action =>
-        this.coinService.getCoins(action.limit, action.offset).pipe(
-          map(data => CoinsActions.loadCoinsSuccess({ coins: data })),
-          catchError(error => of(CoinsActions.loadCoinsFailure({ error })))
-        )
+        this.coinService
+          .getCoins(action.limit, action.offset, action.search)
+          .pipe(
+            map(data => CoinsActions.loadCoinsSuccess({ coins: data })),
+            catchError(error => of(CoinsActions.loadCoinsFailure({ error })))
+          )
       )
     )
   );

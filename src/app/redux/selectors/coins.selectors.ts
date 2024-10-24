@@ -5,5 +5,5 @@ export const selectCoinsStore = createFeatureSelector<ICoinState>('coins');
 
 export const selectAllCoins = createSelector(
   selectCoinsStore,
-  (state: ICoinState) => state
+  (state: ICoinState) => state.coins
 );

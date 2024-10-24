@@ -4,18 +4,25 @@ import { ICoinState } from '../state.model';
 
 export const initialState: ICoinState = {
   coins: [],
+  loading: false,
   error: null,
 };
 
 export const coinReducer = createReducer(
   initialState,
+  on(CoinsActions.loadCoins, state => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
   on(CoinsActions.loadCoinsSuccess, (state, { coins }) => ({
     ...state,
     coins,
-    error: null,
+    loading: false,
   })),
   on(CoinsActions.loadCoinsFailure, (state, { error }) => ({
     ...state,
-    error,
+    loading: false,
+    error: error,
   }))
 );
