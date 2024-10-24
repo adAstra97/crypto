@@ -15,19 +15,29 @@ export class CoinService {
   constructor(private http: HttpClient) {}
 
   public getCoins(
-    limit = 10,
-    offset = 0,
-    search?: string
-  ): Observable<ICoin[]> {
+    limit: number,
+    offset: number,
+    search?: string,
+    sortBy?: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr',
+    sortDirection?: 'asc' | 'desc'
+  ) {
     let queryParams = `limit=${limit}&offset=${offset}`;
 
     if (search) {
       queryParams += `&search=${search}`;
     }
 
-    return this.http
-      .get<ICoinResponse>(`${this.API_URL}?${queryParams}`)
-      .pipe(map(response => response.data));
+    return this.http.get<ICoinResponse>(`${this.API_URL}?${queryParams}`).pipe(
+      map(response => {
+        let coins = response.data;
+
+        if (sortBy && sortDirection) {
+          coins = this.sortCoins(coins, sortBy, sortDirection);
+        }
+
+        return coins;
+      })
+    );
   }
 
   public getTotalCoins(search?: string): Observable<number> {
@@ -40,5 +50,22 @@ export class CoinService {
     return this.http
       .get<ICoinResponse>(`${this.API_URL}?${queryParams}`)
       .pipe(map(response => response?.data?.length || 0));
+  }
+
+  private sortCoins(
+    coins: ICoin[],
+    sortBy: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr',
+    sortDirection: 'asc' | 'desc'
+  ): ICoin[] {
+    return coins.sort((a, b) => {
+      const valueA = parseFloat(a[sortBy]);
+      const valueB = parseFloat(b[sortBy]);
+
+      if (sortDirection === 'asc') {
+        return valueA > valueB ? 1 : -1;
+      } else {
+        return valueA < valueB ? 1 : -1;
+      }
+    });
   }
 }

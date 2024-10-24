@@ -5,7 +5,13 @@ const actionSource = '[CoinCap API]';
 
 export const loadCoins = createAction(
   `${actionSource} Load Coins`,
-  props<{ limit: number; offset: number; search?: string }>()
+  props<{
+    limit: number;
+    offset: number;
+    search?: string;
+    sortBy?: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr';
+    sortDirection?: 'asc' | 'desc';
+  }>()
 );
 export const loadCoinsSuccess = createAction(
   `${actionSource} Load Coins Success`,

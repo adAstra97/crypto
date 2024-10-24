@@ -10,9 +10,24 @@
     <tr>
       <th>Symbol</th>
       <th>Logo</th>
-      <th>Price (USD)</th>
-      <th>Market Cap (USD)</th>
-      <th>Change (24h)</th>
+      <th (click)="onSort('priceUsd')">
+        Price (USD)
+        <span *ngIf="sortBy === 'priceUsd'">
+          {{ sortDirection === 'asc' ? '↓' : '↑' }}
+        </span>
+      </th>
+      <th (click)="onSort('marketCapUsd')">
+        Market Cap (USD)
+        <span *ngIf="sortBy === 'marketCapUsd'">
+          {{ sortDirection === 'asc' ? '↓' : '↑' }}
+        </span>
+      </th>
+      <th (click)="onSort('changePercent24Hr')">
+        Change (24h)
+        <span *ngIf="sortBy === 'changePercent24Hr'">
+          {{ sortDirection === 'asc' ? '↓' : '↑' }}
+        </span>
+      </th>
       <th>Action</th>
     </tr>
   </thead>

@@ -21,6 +21,9 @@ export class CoinListComponent implements OnInit {
   public pageSize = 10;
   public totalCoins = 0;
 
+  public sortBy?: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr';
+  public sortDirection: 'asc' | 'desc' = 'asc';
+
   constructor(
     private store: Store,
     private coinService: CoinService
@@ -46,6 +49,8 @@ export class CoinListComponent implements OnInit {
         limit: this.pageSize,
         offset: this.currentOffset,
         search: this.searchQuery,
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
       })
     );
   }
@@ -59,6 +64,18 @@ export class CoinListComponent implements OnInit {
   public onSearch(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.searchSubject.next(filterValue);
+  }
+
+  public onSort(
+    field: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr'
+  ): void {
+    if (this.sortBy === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = field;
+      this.sortDirection = 'asc';
+    }
+    this.loadData();
   }
 
   public getIconUrl(symbol: string): string {
