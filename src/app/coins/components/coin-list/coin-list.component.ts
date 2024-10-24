@@ -15,6 +15,5 @@ export class CoinListComponent implements OnInit {
 
   ngOnInit(): void {
     this.coins$ = this.coinService.getCoins();
-    this.coins$.subscribe(coins => console.log(coins));
   }
 }
