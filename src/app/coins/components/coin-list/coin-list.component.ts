@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { ICoin } from '../../../shared/models/coin-response.model';
 import * as CoinsActions from '../../../redux/actions/coins.actions';
 import * as fromCoinsSelectors from '../../../redux/selectors/coins.selectors';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-coin-list',
@@ -45,6 +46,10 @@ export class CoinListComponent implements OnInit {
 
   public formatPrice(price: number): string {
     return String(price);
+  }
+
+  public onPageChange(event: PageEvent): void {
+    this.loadData(event.pageSize, event.pageIndex * event.pageSize);
   }
 
   public addToPortfolio(coin: ICoin): void {
