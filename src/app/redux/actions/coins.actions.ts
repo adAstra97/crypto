@@ -13,5 +13,5 @@ export const loadCoinsSuccess = createAction(
 );
 export const loadCoinsFailure = createAction(
   `${actionSource} Load Coins Failure`,
-  props<{ error: Error }>()
+  props<{ error: string | null }>()
 );
