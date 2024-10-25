@@ -57,7 +57,7 @@ export class CoinService {
 
   public getCoinDetail(id: string): Observable<ICoin> {
     return this.http
-      .get<IDetailResponse>(`${this.API_URL}/assets/${id}`)
+      .get<IDetailResponse>(`${this.API_URL}/${id}`)
       .pipe(map(response => response.data));
   }
 
