@@ -12,6 +12,19 @@ export interface ICoin {
   vwap24Hr: string;
 }
 
+export interface IHistoryItem {
+  priceUsd: string;
+  time: number;
+}
+
 export interface ICoinResponse {
   data: ICoin[];
+}
+
+export interface IDetailResponse {
+  data: ICoin;
+}
+
+export interface IHistoryResponse {
+  data: IHistoryItem[];
 }

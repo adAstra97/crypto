@@ -1,6 +1,9 @@
 import {
   ICoin,
   ICoinResponse,
+  IDetailResponse,
+  IHistoryItem,
+  IHistoryResponse,
 } from './../../shared/models/coin-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -50,6 +53,23 @@ export class CoinService {
     return this.http
       .get<ICoinResponse>(`${this.API_URL}?${queryParams}`)
       .pipe(map(response => response?.data?.length || 0));
+  }
+
+  public getCoinDetail(id: string): Observable<ICoin> {
+    return this.http
+      .get<IDetailResponse>(`${this.API_URL}/assets/${id}`)
+      .pipe(map(response => response.data));
+  }
+
+  public getCoinHistory(
+    id: string,
+    interval: string
+  ): Observable<IHistoryItem[]> {
+    return this.http
+      .get<IHistoryResponse>(
+        `${this.API_URL}/assets/${id}/history?interval=${interval}`
+      )
+      .pipe(map(response => response.data));
   }
 
   private sortCoins(
