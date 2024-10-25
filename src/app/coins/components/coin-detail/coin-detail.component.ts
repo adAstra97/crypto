@@ -37,6 +37,10 @@ export class CoinDetailComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  public getIconUrl(symbol: string): string {
+    return `https://assets.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png`;
+  }
+
   private loadCoinDetails(id: string): void {
     this.coinService.getCoinDetail(id).subscribe({
       next: coin => {
