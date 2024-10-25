@@ -25,6 +25,8 @@
     "@ngrx/entity": "^18.1.0",
     "@ngrx/store": "^18.1.0",
     "@ngrx/store-devtools": "^18.1.0",
+    "chart.js": "^4.4.5",
+    "ngx-chartjs": "^0.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
