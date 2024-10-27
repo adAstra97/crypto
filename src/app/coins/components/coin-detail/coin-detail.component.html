@@ -1,6 +1,5 @@
 <div *ngIf="isLoading" class="spinner">
-  <p>Loading...</p>
-  <!-- Можете добавить красивый спиннер -->
+  <mat-spinner></mat-spinner>
 </div>
 
 <div *ngIf="errorMessage" class="error">
@@ -19,14 +18,15 @@
 
   <div class="chart-options">
     <label for="timeRange">Time range:</label>
-    <select id="timeRange">
-      <option value="1h">1 Hour</option>
-      <option value="12h">12 Hours</option>
-      <option value="24h">24 Hours</option>
+    <select id="timeRange" (change)="onTimeRangeChange($event)">
+      <option value="h1">1 Hour</option>
+      <option value="h12">12 Hours</option>
+      <option value="d1" selected>24 Hours</option>
     </select>
   </div>
 
   <div class="chart">
+    <canvas id="coinChart"></canvas>
   </div>
 
   <button (click)="addToPortfolio(coin)">Add to Portfolio</button>

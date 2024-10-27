@@ -67,7 +67,7 @@ export class CoinService {
   ): Observable<IHistoryItem[]> {
     return this.http
       .get<IHistoryResponse>(
-        `${this.API_URL}/assets/${id}/history?interval=${interval}`
+        `${this.API_URL}/${id}/history?interval=${interval}`
       )
       .pipe(map(response => response.data));
   }
