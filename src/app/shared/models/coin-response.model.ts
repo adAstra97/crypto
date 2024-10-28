@@ -10,6 +10,8 @@ export interface ICoin {
   priceUsd: string;
   changePercent24Hr: string;
   vwap24Hr: string;
+  quantity?: number;
+  purchasePrice?: number;
 }
 
 export interface IHistoryItem {
