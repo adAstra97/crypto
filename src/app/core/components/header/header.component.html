@@ -1,1 +1,10 @@
-<p>header works!</p>
+<header>
+  <div class="popular-coins">
+    <ng-container *ngFor="let coin of popularCoins$ | async">
+      <div class="coin">
+        <span>{{ coin.symbol }}</span>
+        <span>{{ coin.priceUsd | number: '1.2-2' }} USD</span>
+      </div>
+    </ng-container>
+  </div>
+</header>

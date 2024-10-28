@@ -8,6 +8,7 @@ import { provideHttpClient } from '@angular/common/http';
 @NgModule({
   declarations: [HeaderComponent, PortfolioComponent],
   imports: [CommonModule, SharedModule],
+  exports: [HeaderComponent],
   providers: [provideHttpClient()],
 })
 export class CoreModule {}

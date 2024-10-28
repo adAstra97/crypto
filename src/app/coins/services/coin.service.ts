@@ -72,6 +72,10 @@ export class CoinService {
       .pipe(map(response => response.data));
   }
 
+  public getPopularCoins(): Observable<ICoin[]> {
+    return this.getCoins(3, 0).pipe(map(coins => coins.slice(0, 3)));
+  }
+
   private sortCoins(
     coins: ICoin[],
     sortBy: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr',
