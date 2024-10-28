@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ICoin } from '../../../shared/models/coin-response.model';
 import * as CoinsActions from '../../../redux/actions/coins.actions';
 import * as fromCoinsSelectors from '../../../redux/selectors/coins.selectors';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CoinService } from '../../services/coin.service';
 import { Router } from '@angular/router';
+import { PortfolioService } from '../../../core/services/portfolio.service';
+import { ICoin } from '../../../shared/models/coin-response.model';
 
 @Component({
   selector: 'app-coin-list',
@@ -25,10 +26,14 @@ export class CoinListComponent implements OnInit {
   public sortBy?: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr';
   public sortDirection: 'asc' | 'desc' = 'asc';
 
+  public isAddCoinModalOpen = false;
+  public selectedCoin?: ICoin;
+
   constructor(
     private store: Store,
     private router: Router,
-    private coinService: CoinService
+    private coinService: CoinService,
+    private portfolioService: PortfolioService
   ) {}
 
   ngOnInit(): void {
@@ -119,8 +124,22 @@ export class CoinListComponent implements OnInit {
     }
   }
 
-  public addToPortfolio(coin: ICoin): void {
-    console.log('Added to portfolio:', coin);
+  public openAddCoinModal(event: MouseEvent, coin: ICoin): void {
+    event.stopPropagation();
+    this.selectedCoin = coin;
+    this.isAddCoinModalOpen = true;
+  }
+
+  public closeAddCoinModal(): void {
+    this.isAddCoinModalOpen = false;
+    this.selectedCoin = undefined;
+  }
+
+  public addToPortfolio(quantity: number): void {
+    if (this.selectedCoin) {
+      this.portfolioService.addCoin(this.selectedCoin, quantity);
+      this.closeAddCoinModal();
+    }
   }
 
   public navigateToCoin(coinId: string): void {

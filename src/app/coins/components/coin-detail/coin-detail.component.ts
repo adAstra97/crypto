@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ICoin } from '../../../shared/models/coin-response.model';
 import { CoinService } from '../../services/coin.service';
 import { Chart, registerables } from 'chart.js';
+import { PortfolioService } from '../../../core/services/portfolio.service';
 
 @Component({
   selector: 'app-coin-detail',
@@ -15,10 +16,14 @@ export class CoinDetailComponent implements OnInit {
   public isLoading = true;
   public errorMessage: string | null = null;
 
+  public isAddCoinModalOpen = false;
+  public selectedCoin?: ICoin;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private coinService: CoinService
+    private coinService: CoinService,
+    private portfolioService: PortfolioService
   ) {
     Chart.register(...registerables);
   }
@@ -41,8 +46,22 @@ export class CoinDetailComponent implements OnInit {
     this.loadChart(interval);
   }
 
-  public addToPortfolio(coin: ICoin): void {
-    console.log('Added to portfolio:', coin);
+  public openAddCoinModal(event: MouseEvent, coin: ICoin): void {
+    event.stopPropagation();
+    this.selectedCoin = coin;
+    this.isAddCoinModalOpen = true;
+  }
+
+  public closeAddCoinModal(): void {
+    this.isAddCoinModalOpen = false;
+    this.selectedCoin = undefined;
+  }
+
+  public addToPortfolio(quantity: number): void {
+    if (this.selectedCoin) {
+      this.portfolioService.addCoin(this.selectedCoin, quantity);
+      this.closeAddCoinModal();
+    }
   }
 
   public goBack(): void {

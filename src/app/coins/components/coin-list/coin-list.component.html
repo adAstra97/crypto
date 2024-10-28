@@ -49,7 +49,7 @@
             : 'n/a'
         }}
       </td>
-      <td><button>Add</button></td>
+      <td><button (click)="openAddCoinModal($event, coin)">Add</button></td>
     </tr>
   </tbody>
 </table>
@@ -58,3 +58,10 @@
   <button (click)="onPreviousPage()" [disabled]="isFirstPage">Prev</button>
   <button (click)="onNextPage()" [disabled]="isLastPage">Next</button>
 </div>
+
+<app-add-coin-modal
+  *ngIf="isAddCoinModalOpen"
+  [coin]="selectedCoin"
+  (close)="closeAddCoinModal()"
+  (addCoin)="addToPortfolio($event)"
+></app-add-coin-modal>

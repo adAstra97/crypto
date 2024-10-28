@@ -29,6 +29,13 @@
     <canvas id="coinChart"></canvas>
   </div>
 
-  <button (click)="addToPortfolio(coin)">Add to Portfolio</button>
+  <button (click)="openAddCoinModal($event, coin)">Add to Portfolio</button>
   <button (click)="goBack()">Back to List</button>
 </div>
+
+<app-add-coin-modal
+  *ngIf="isAddCoinModalOpen"
+  [coin]="selectedCoin"
+  (close)="closeAddCoinModal()"
+  (addCoin)="addToPortfolio($event)"
+></app-add-coin-modal>
