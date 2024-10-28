@@ -7,4 +7,19 @@
       </div>
     </ng-container>
   </div>
+  <div class="portfolio-value">
+    <ng-container *ngIf="portfolioValue">
+      <span>{{ portfolioValue | number: '1.2-2' }} USD</span>
+    </ng-container>
+    <ng-container *ngIf="portfolioDifference">
+      <span
+        [ngClass]="{
+          positive: portfolioDifference.value >= 0,
+          negative: portfolioDifference.value < 0,
+        }">
+        {{ portfolioDifference.value | number: '1.2-2' }}
+        ({{ portfolioDifference.percent | number: '1.2-2' }} %)
+      </span>
+    </ng-container>
+  </div>
 </header>

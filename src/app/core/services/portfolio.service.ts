@@ -26,6 +26,26 @@ export class PortfolioService {
     this.portfolioCoinsSubject.next(portfolio);
   }
 
+  public getPortfolioValue(): number {
+    const portfolio = this.loadPortfolioCoins();
+    return portfolio.reduce(
+      (total, coin) => total + +coin.priceUsd * (coin.quantity || 0),
+      0
+    );
+  }
+
+  public getPortfolioDifference(): { value: number; percent: number } {
+    const portfolio = this.loadPortfolioCoins();
+    const originalValue = portfolio.reduce(
+      (total, coin) => total + (coin.purchasePrice || 0) * (coin.quantity || 0),
+      0
+    );
+    const currentValue = this.getPortfolioValue();
+    const difference = currentValue - originalValue;
+    const percent = originalValue > 0 ? (difference / originalValue) * 100 : 0;
+    return { value: difference, percent };
+  }
+
   private loadPortfolioCoins(): ICoin[] {
     const portfolio = localStorage.getItem('portfolio');
     return portfolio ? JSON.parse(portfolio) : [];
