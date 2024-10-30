@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PortfolioService } from '../../services/portfolio.service';
-import { ICoin } from '../../../shared/models/coin-response.model';
+import { PortfolioService } from '../../../core/services/portfolio.service';
+import { ICoin } from '../../models/coin-response.model';
 
 @Component({
   selector: 'app-portfolio-modal',

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ModalComponent } from './components/modal/modal.component';
 import { InputComponent } from './components/input/input.component';
 import { ButtonComponent } from './components/button/button.component';
 import { MatTableModule } from '@angular/material/table';
@@ -13,6 +12,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AddCoinModalComponent } from './components/add-coin-modal/add-coin-modal.component';
 import { FormsModule } from '@angular/forms';
+import { PortfolioModalComponent } from './components/portfolio-modal/portfolio-modal.component';
 
 const materialModules = [
   MatTableModule,
@@ -26,17 +26,17 @@ const materialModules = [
 
 @NgModule({
   declarations: [
-    ModalComponent,
     InputComponent,
     ButtonComponent,
     AddCoinModalComponent,
+    PortfolioModalComponent,
   ],
   imports: [CommonModule, FormsModule, ...materialModules],
   exports: [
-    ModalComponent,
     InputComponent,
     ButtonComponent,
     AddCoinModalComponent,
+    PortfolioModalComponent,
     ...materialModules,
   ],
 })
