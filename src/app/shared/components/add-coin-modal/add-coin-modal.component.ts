@@ -11,7 +11,6 @@ export class AddCoinModalComponent {
   @Output() close = new EventEmitter<void>();
   @Output() addCoin = new EventEmitter<number>();
   public errorText = '';
-
   public quantity = 1;
 
   public confirmAdd(): void {

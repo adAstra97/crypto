@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { PortfolioService } from '../../../core/services/portfolio.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ICoin } from '../../models/coin-response.model';
 
 @Component({
@@ -7,22 +6,16 @@ import { ICoin } from '../../models/coin-response.model';
   templateUrl: './portfolio-modal.component.html',
   styleUrl: './portfolio-modal.component.scss',
 })
-export class PortfolioModalComponent implements OnInit {
-  public coins: ICoin[] = [];
+export class PortfolioModalComponent {
+  @Input() coins!: ICoin[];
+  @Output() close = new EventEmitter<void>();
+  @Output() removeCoin = new EventEmitter<string>();
 
-  constructor(private portfolioService: PortfolioService) {}
-
-  ngOnInit(): void {
-    this.portfolioService.portfolioCoins$.subscribe(coins => {
-      this.coins = coins;
-    });
+  public confirmRemove(coinId: string): void {
+    this.removeCoin.emit(coinId);
   }
 
-  public removeCoin(coinId: string): void {
-    this.portfolioService.removeCoin(coinId);
-  }
-
-  public close(): void {
-    console.log('close modal');
+  public closeModal(): void {
+    this.close.emit();
   }
 }

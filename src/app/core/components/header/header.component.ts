@@ -17,6 +17,8 @@ export class HeaderComponent implements OnInit {
   public popularCoins!: ICoin[];
   public portfolioValue!: number;
   public portfolioDifference!: IPortfolioDifference;
+  public isPortfolioModalOpen = false;
+  public portfolioCoins!: ICoin[];
 
   constructor(
     private coinService: CoinService,
@@ -27,13 +29,32 @@ export class HeaderComponent implements OnInit {
     this.updatePortfolioValue();
     this.updatePortfolioDifference();
 
-    this.portfolioService.portfolioCoins$.subscribe(() => {
+    this.portfolioService.portfolioCoins$.subscribe(data => {
       this.updatePortfolioValue();
+      this.updatePortfolioDifference();
+
+      this.portfolioCoins = data;
     });
 
     this.coinService.popularCoins$.subscribe(coins => {
       this.popularCoins = coins;
     });
+  }
+
+  public openPortfolioModal(): void {
+    this.isPortfolioModalOpen = true;
+  }
+
+  public closePortfolioModal(): void {
+    this.isPortfolioModalOpen = false;
+  }
+
+  public removeFromPortfolio(coinId: string): void {
+    this.portfolioService.removeCoin(coinId);
+
+    if (this.portfolioCoins.length === 0) {
+      this.closePortfolioModal();
+    }
   }
 
   private updatePortfolioValue(): void {

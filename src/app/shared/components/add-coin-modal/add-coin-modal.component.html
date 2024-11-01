@@ -3,12 +3,12 @@
   (click)="closeModal()"
   (keydown.enter)="closeModal()"
   tabindex="0"></div>
-<div class="modal-content" tabindex="0">
+<div class="modal-content">
   <h2>Add {{ coin?.symbol }} to Portfolio</h2>
   <p>Current Price: {{ coin?.priceUsd | number: '1.2-2' }} USD</p>
   <label for="quantity">Quantity</label>
   <input type="number" id="quantity" [(ngModel)]="quantity" min="1" max="1000"/>
   <span>{{ errorText }}</span>
-  <button (click)="confirmAdd()" (keydown.enter)="confirmAdd()">Add</button>
-  <button (click)="closeModal()" (keydown.enter)="closeModal()">Cancel</button>
+  <button (click)="confirmAdd()">Add</button>
+  <button (click)="closeModal()">Cancel</button>
 </div>

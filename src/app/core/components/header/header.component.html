@@ -7,19 +7,32 @@
       </div>
     </ng-container>
   </div>
-  <div class="portfolio-value">
-    <ng-container *ngIf="portfolioValue">
-      <span>{{ portfolioValue | number: '1.2-2' }} USD</span>
-    </ng-container>
-    <ng-container *ngIf="portfolioDifference">
-      <span
-        [ngClass]="{
-          positive: portfolioDifference.value >= 0,
-          negative: portfolioDifference.value < 0,
-        }">
-        {{ portfolioDifference.value | number: '1.2-2' }}
-        ({{ portfolioDifference.percent | number: '1.2-2' }} %)
-      </span>
-    </ng-container>
+
+  <div class="portfolio-value" *ngIf="portfolioValue; else emptyPortfolio">
+    <button (click)="openPortfolioModal()" class="portfolio-button">
+      <ng-container *ngIf="portfolioValue">
+        <span>{{ portfolioValue | number: '1.2-2' }} USD</span>
+      </ng-container>
+      <ng-container *ngIf="portfolioDifference">
+        <span
+          [ngClass]="{
+            positive: portfolioDifference.value >= 0,
+            negative: portfolioDifference.value < 0,
+          }">
+          {{ portfolioDifference.value | number: '1.2-2' }}
+          ({{ portfolioDifference.percent | number: '1.2-2' }} %)
+        </span>
+      </ng-container>
+    </button>
   </div>
+
+  <ng-template #emptyPortfolio>
+    <div class="empty-portfolio-message">Portfolio is empty</div>
+  </ng-template>
 </header>
+
+<app-portfolio-modal
+  *ngIf="isPortfolioModalOpen"
+  [coins]="portfolioCoins"
+  (close)="closePortfolioModal()"
+  (removeCoin)="removeFromPortfolio($event)"></app-portfolio-modal>
