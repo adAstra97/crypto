@@ -59,9 +59,10 @@
   <button (click)="onNextPage()" [disabled]="isLastPage">Next</button>
 </div>
 
-<app-add-coin-modal
+<app-modal
   *ngIf="isAddCoinModalOpen"
   [coin]="selectedCoin"
+  [mode]="isAdding ? 'add' : 'portfolio'"
   (close)="closeAddCoinModal()"
-  (addCoin)="addToPortfolio($event)"
-></app-add-coin-modal>
+  (addCoin)="addToPortfolio($event)">
+</app-modal>

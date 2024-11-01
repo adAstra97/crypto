@@ -10,9 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AddCoinModalComponent } from './components/add-coin-modal/add-coin-modal.component';
 import { FormsModule } from '@angular/forms';
-import { PortfolioModalComponent } from './components/portfolio-modal/portfolio-modal.component';
+import { ModalComponent } from './components/modal/modal.component';
 
 const materialModules = [
   MatTableModule,
@@ -25,18 +24,12 @@ const materialModules = [
 ];
 
 @NgModule({
-  declarations: [
-    InputComponent,
-    ButtonComponent,
-    AddCoinModalComponent,
-    PortfolioModalComponent,
-  ],
+  declarations: [InputComponent, ButtonComponent, ModalComponent],
   imports: [CommonModule, FormsModule, ...materialModules],
   exports: [
     InputComponent,
     ButtonComponent,
-    AddCoinModalComponent,
-    PortfolioModalComponent,
+    ModalComponent,
     ...materialModules,
   ],
 })

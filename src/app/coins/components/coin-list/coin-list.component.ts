@@ -26,6 +26,7 @@ export class CoinListComponent implements OnInit {
   public sortBy?: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr';
   public sortDirection: 'asc' | 'desc' = 'asc';
 
+  public isAdding = true;
   public isAddCoinModalOpen = false;
   public selectedCoin?: ICoin;
 

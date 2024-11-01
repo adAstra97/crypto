@@ -31,8 +31,10 @@
   </ng-template>
 </header>
 
-<app-portfolio-modal
+<app-modal
   *ngIf="isPortfolioModalOpen"
   [coins]="portfolioCoins"
+  [mode]="isAdding ? 'add' : 'portfolio'"
   (close)="closePortfolioModal()"
-  (removeCoin)="removeFromPortfolio($event)"></app-portfolio-modal>
+  (removeCoin)="removeFromPortfolio($event)">
+</app-modal>

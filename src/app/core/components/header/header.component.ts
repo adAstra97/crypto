@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
   public popularCoins!: ICoin[];
   public portfolioValue!: number;
   public portfolioDifference!: IPortfolioDifference;
+  public isAdding = false;
   public isPortfolioModalOpen = false;
   public portfolioCoins!: ICoin[];
 

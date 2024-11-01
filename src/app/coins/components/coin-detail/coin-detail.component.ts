@@ -23,6 +23,7 @@ export class CoinDetailComponent implements OnInit, AfterViewInit {
   public errorMessage: string | null = null;
 
   public isAddCoinModalOpen = false;
+  public isAdding = true;
   public selectedCoin?: ICoin;
 
   @ViewChild('coinChartCanvas', { static: false })

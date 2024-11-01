@@ -1,0 +1,35 @@
+<div
+  class="modal-overlay"
+  (click)="closeModal()"
+  (keydown.enter)="closeModal()"
+  tabindex="0"></div>
+<div class="modal-content">
+  <ng-container *ngIf="mode === 'portfolio'; else addCoinTemplate">
+    <h2>Your Portfolio</h2>
+    <ul>
+      <li *ngFor="let coin of coins">
+        {{ coin.symbol }}: {{ coin.quantity }} ({{
+          coin.priceUsd | number: '1.2-2'
+        }}
+        USD)
+        <button (click)="confirmRemove(coin.id)">Remove</button>
+      </li>
+    </ul>
+    <button (click)="closeModal()">Close</button>
+  </ng-container>
+
+  <ng-template #addCoinTemplate>
+    <h2>Add {{ coin?.symbol }} to Portfolio</h2>
+    <p>Current Price: {{ coin?.priceUsd | number: '1.2-2' }} USD</p>
+    <label for="quantity">Quantity</label>
+    <input
+      type="number"
+      id="quantity"
+      [(ngModel)]="quantity"
+      min="1"
+      max="1000" />
+    <span>{{ errorText }}</span>
+    <button (click)="confirmAdd()">Add</button>
+    <button (click)="closeModal()">Cancel</button>
+  </ng-template>
+</div>
