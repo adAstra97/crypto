@@ -26,10 +26,11 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPopularCoins();
-    this.updatePortfolioValues();
+    this.updatePortfolioValue();
+    this.updatePortfolioDifference();
 
     this.portfolioService.portfolioCoins$.subscribe(() => {
-      this.updatePortfolioValues();
+      this.updatePortfolioValue();
     });
   }
 
@@ -37,8 +38,13 @@ export class HeaderComponent implements OnInit {
     this.popularCoins$ = this.coinService.getPopularCoins();
   }
 
-  private updatePortfolioValues(): void {
+  private updatePortfolioValue(): void {
     this.portfolioValue = this.portfolioService.getPortfolioValue();
-    this.portfolioDifference = this.portfolioService.getPortfolioDifference();
+  }
+
+  private updatePortfolioDifference(): void {
+    this.portfolioService.getPortfolioDifference().subscribe(difference => {
+      this.portfolioDifference = difference;
+    });
   }
 }

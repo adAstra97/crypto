@@ -43,7 +43,7 @@ export class CoinService {
     );
   }
 
-  public getTotalCoins(search?: string): Observable<number> {
+  public getTotalCoins(search?: string): Observable<ICoin[]> {
     let queryParams = '';
 
     if (search) {
@@ -52,7 +52,7 @@ export class CoinService {
 
     return this.http
       .get<ICoinResponse>(`${this.API_URL}?${queryParams}`)
-      .pipe(map(response => response?.data?.length || 0));
+      .pipe(map(response => response?.data || []));
   }
 
   public getCoinDetail(id: string): Observable<ICoin> {

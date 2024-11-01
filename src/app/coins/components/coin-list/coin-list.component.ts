@@ -64,7 +64,7 @@ export class CoinListComponent implements OnInit {
 
   private loadTotalCoins(value?: string): void {
     this.coinService.getTotalCoins(value).subscribe(total => {
-      this.totalCoins = total;
+      this.totalCoins = total.length;
     });
   }
 
