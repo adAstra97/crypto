@@ -7,13 +7,16 @@ import {
 } from './../../shared/models/coin-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CoinService {
   private readonly API_URL = 'https://api.coincap.io/v2/assets';
+
+  private popularCoinsSubject = new BehaviorSubject<ICoin[]>([]);
+  public popularCoins$ = this.popularCoinsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -50,9 +53,14 @@ export class CoinService {
       queryParams += `&search=${search}`;
     }
 
-    return this.http
-      .get<ICoinResponse>(`${this.API_URL}?${queryParams}`)
-      .pipe(map(response => response?.data || []));
+    return this.http.get<ICoinResponse>(`${this.API_URL}?${queryParams}`).pipe(
+      map(response => {
+        const coins = response?.data || [];
+        this.popularCoinsSubject.next(coins.slice(0, 3));
+
+        return coins;
+      })
+    );
   }
 
   public getCoinDetail(id: string): Observable<ICoin> {
@@ -70,10 +78,6 @@ export class CoinService {
         `${this.API_URL}/${id}/history?interval=${interval}`
       )
       .pipe(map(response => response.data));
-  }
-
-  public getPopularCoins(): Observable<ICoin[]> {
-    return this.getCoins(3, 0).pipe(map(coins => coins.slice(0, 3)));
   }
 
   private sortCoins(

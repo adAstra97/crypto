@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ICoin } from '../../../shared/models/coin-response.model';
 import { CoinService } from '../../services/coin.service';
@@ -8,9 +14,9 @@ import { PortfolioService } from '../../../core/services/portfolio.service';
 @Component({
   selector: 'app-coin-detail',
   templateUrl: './coin-detail.component.html',
-  styleUrls: ['./coin-detail.component.scss'],
+  styleUrl: './coin-detail.component.scss',
 })
-export class CoinDetailComponent implements OnInit {
+export class CoinDetailComponent implements OnInit, AfterViewInit {
   public coin!: ICoin;
   public chart!: Chart<'line', string[], string>;
   public isLoading = true;
@@ -18,6 +24,9 @@ export class CoinDetailComponent implements OnInit {
 
   public isAddCoinModalOpen = false;
   public selectedCoin?: ICoin;
+
+  @ViewChild('coinChartCanvas', { static: false })
+  coinChartCanvas!: ElementRef<HTMLCanvasElement>;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,6 +46,10 @@ export class CoinDetailComponent implements OnInit {
       this.errorMessage = 'Invalid coin ID';
     }
 
+    this.coinService.getTotalCoins().subscribe();
+  }
+
+  ngAfterViewInit(): void {
     this.loadChart('d1');
   }
 
@@ -100,20 +113,22 @@ export class CoinDetailComponent implements OnInit {
             this.chart.destroy();
           }
 
-          this.chart = new Chart('coinChart', {
-            type: 'line',
-            data: {
-              labels: labels,
-              datasets: [
-                {
-                  label: 'Price (USD)',
-                  data: prices,
-                  borderColor: 'rgba(75, 192, 192, 1)',
-                  fill: true,
-                },
-              ],
-            },
-          });
+          if (this.coinChartCanvas) {
+            this.chart = new Chart(this.coinChartCanvas.nativeElement, {
+              type: 'line',
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: 'Price (USD)',
+                    data: prices,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: true,
+                  },
+                ],
+              },
+            });
+          }
         },
       });
     }

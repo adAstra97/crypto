@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { ICoin } from '../../../shared/models/coin-response.model';
 import { CoinService } from '../../../coins/services/coin.service';
 import { PortfolioService } from '../../services/portfolio.service';
@@ -15,7 +14,7 @@ interface IPortfolioDifference {
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-  public popularCoins$!: Observable<ICoin[]>;
+  public popularCoins!: ICoin[];
   public portfolioValue!: number;
   public portfolioDifference!: IPortfolioDifference;
 
@@ -25,17 +24,16 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadPopularCoins();
     this.updatePortfolioValue();
     this.updatePortfolioDifference();
 
     this.portfolioService.portfolioCoins$.subscribe(() => {
       this.updatePortfolioValue();
     });
-  }
 
-  private loadPopularCoins(): void {
-    this.popularCoins$ = this.coinService.getPopularCoins();
+    this.coinService.popularCoins$.subscribe(coins => {
+      this.popularCoins = coins;
+    });
   }
 
   private updatePortfolioValue(): void {
