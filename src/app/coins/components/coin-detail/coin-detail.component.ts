@@ -4,19 +4,21 @@ import {
   AfterViewInit,
   ViewChild,
   ElementRef,
+  OnDestroy,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ICoin } from '../../../shared/models/coin-response.model';
 import { CoinService } from '../../services/coin.service';
 import { Chart, registerables } from 'chart.js';
 import { PortfolioService } from '../../../core/services/portfolio.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-coin-detail',
   templateUrl: './coin-detail.component.html',
   styleUrl: './coin-detail.component.scss',
 })
-export class CoinDetailComponent implements OnInit, AfterViewInit {
+export class CoinDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   public coin!: ICoin;
   public chart!: Chart<'line', string[], string>;
   public isLoading = true;
@@ -25,6 +27,8 @@ export class CoinDetailComponent implements OnInit, AfterViewInit {
   public isAddCoinModalOpen = false;
   public isAdding = true;
   public selectedCoin?: ICoin;
+
+  private subscriptions: Subscription[] = [];
 
   @ViewChild('coinChartCanvas', { static: false })
   coinChartCanvas!: ElementRef<HTMLCanvasElement>;
@@ -42,16 +46,20 @@ export class CoinDetailComponent implements OnInit, AfterViewInit {
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
-      this.loadCoinDetails(id);
+      this.subscriptions.push(this.loadCoinDetails(id));
     } else {
       this.errorMessage = 'Invalid coin ID';
     }
 
-    this.coinService.getTotalCoins().subscribe();
+    this.subscriptions.push(this.coinService.getTotalCoins().subscribe());
   }
 
   ngAfterViewInit(): void {
     this.loadChart('d1');
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   public onTimeRangeChange(event: Event): void {
@@ -86,8 +94,8 @@ export class CoinDetailComponent implements OnInit, AfterViewInit {
     return `https://assets.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png`;
   }
 
-  private loadCoinDetails(id: string): void {
-    this.coinService.getCoinDetail(id).subscribe({
+  private loadCoinDetails(id: string): Subscription {
+    return this.coinService.getCoinDetail(id).subscribe({
       next: coin => {
         this.coin = coin;
         this.isLoading = false;
@@ -103,35 +111,37 @@ export class CoinDetailComponent implements OnInit, AfterViewInit {
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
-      this.coinService.getCoinHistory(id, interval).subscribe({
-        next: data => {
-          const prices = data.map(item => item.priceUsd);
-          const labels = data.map(item =>
-            new Date(item.time).toLocaleTimeString()
-          );
+      this.subscriptions.push(
+        this.coinService.getCoinHistory(id, interval).subscribe({
+          next: data => {
+            const prices = data.map(item => item.priceUsd);
+            const labels = data.map(item =>
+              new Date(item.time).toLocaleTimeString()
+            );
 
-          if (this.chart) {
-            this.chart.destroy();
-          }
+            if (this.chart) {
+              this.chart.destroy();
+            }
 
-          if (this.coinChartCanvas) {
-            this.chart = new Chart(this.coinChartCanvas.nativeElement, {
-              type: 'line',
-              data: {
-                labels: labels,
-                datasets: [
-                  {
-                    label: 'Price (USD)',
-                    data: prices,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    fill: true,
-                  },
-                ],
-              },
-            });
-          }
-        },
-      });
+            if (this.coinChartCanvas) {
+              this.chart = new Chart(this.coinChartCanvas.nativeElement, {
+                type: 'line',
+                data: {
+                  labels: labels,
+                  datasets: [
+                    {
+                      label: 'Price (USD)',
+                      data: prices,
+                      borderColor: 'rgba(75, 192, 192, 1)',
+                      fill: true,
+                    },
+                  ],
+                },
+              });
+            }
+          },
+        })
+      );
     }
   }
 }

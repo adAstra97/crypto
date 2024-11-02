@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as CoinsActions from '../../../redux/actions/coins.actions';
 import * as fromCoinsSelectors from '../../../redux/selectors/coins.selectors';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CoinService } from '../../services/coin.service';
 import { Router } from '@angular/router';
@@ -14,8 +14,9 @@ import { ICoin } from '../../../shared/models/coin-response.model';
   templateUrl: './coin-list.component.html',
   styleUrl: './coin-list.component.scss',
 })
-export class CoinListComponent implements OnInit {
+export class CoinListComponent implements OnInit, OnDestroy {
   private searchSubject = new Subject<string>();
+  private subscriptions: Subscription[] = [];
 
   public coins$ = this.store.select(fromCoinsSelectors.selectAllCoins);
   public searchQuery = '';
@@ -41,7 +42,7 @@ export class CoinListComponent implements OnInit {
     this.loadData();
     this.loadTotalCoins();
 
-    this.searchSubject
+    const searchSubscription = this.searchSubject
       .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(searchQuery => {
         this.searchQuery = searchQuery;
@@ -49,6 +50,12 @@ export class CoinListComponent implements OnInit {
         this.loadData();
         this.loadTotalCoins(searchQuery);
       });
+
+    this.subscriptions.push(searchSubscription);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   private loadData(): void {
@@ -64,9 +71,13 @@ export class CoinListComponent implements OnInit {
   }
 
   private loadTotalCoins(value?: string): void {
-    this.coinService.getTotalCoins(value).subscribe(total => {
-      this.totalCoins = total.length;
-    });
+    const totalCoinsSubscription = this.coinService
+      .getTotalCoins(value)
+      .subscribe(total => {
+        this.totalCoins = total.length;
+      });
+
+    this.subscriptions.push(totalCoinsSubscription);
   }
 
   public onSearch(searchTerm: string): void {
