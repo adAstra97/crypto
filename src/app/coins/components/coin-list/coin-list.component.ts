@@ -51,6 +51,7 @@ export class CoinListComponent implements OnInit, OnDestroy {
         this.loadTotalCoins(searchQuery);
       });
 
+    this.subscriptions.push(this.coinService.getPopularCoins().subscribe());
     this.subscriptions.push(searchSubscription);
   }
 

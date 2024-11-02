@@ -51,7 +51,7 @@ export class CoinDetailComponent implements OnInit, AfterViewInit, OnDestroy {
       this.errorMessage = 'Invalid coin ID';
     }
 
-    this.subscriptions.push(this.coinService.getTotalCoins().subscribe());
+    this.subscriptions.push(this.coinService.getPopularCoins().subscribe());
   }
 
   ngAfterViewInit(): void {

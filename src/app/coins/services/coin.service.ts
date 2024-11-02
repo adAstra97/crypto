@@ -53,14 +53,9 @@ export class CoinService {
       queryParams += `&search=${search}`;
     }
 
-    return this.http.get<ICoinResponse>(`${this.API_URL}?${queryParams}`).pipe(
-      map(response => {
-        const coins = response?.data || [];
-        this.popularCoinsSubject.next(coins.slice(0, 3));
-
-        return coins;
-      })
-    );
+    return this.http
+      .get<ICoinResponse>(`${this.API_URL}?${queryParams}`)
+      .pipe(map(response => response?.data || []));
   }
 
   public getCoinDetail(id: string): Observable<ICoin> {
@@ -78,6 +73,16 @@ export class CoinService {
         `${this.API_URL}/${id}/history?interval=${interval}`
       )
       .pipe(map(response => response.data));
+  }
+
+  public getPopularCoins(): Observable<ICoin[]> {
+    return this.getTotalCoins().pipe(
+      map(response => {
+        const coins = response.slice(0, 3);
+        this.popularCoinsSubject.next(coins);
+        return coins;
+      })
+    );
   }
 
   private sortCoins(

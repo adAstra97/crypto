@@ -46,6 +46,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     );
 
+    this.subscriptions.push(this.coinService.getPopularCoins().subscribe());
     this.subscriptions.push(portfolioCoinsSubscription);
     this.subscriptions.push(popularCoinsSubscription);
   }
