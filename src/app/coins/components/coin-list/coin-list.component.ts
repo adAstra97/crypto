@@ -69,9 +69,8 @@ export class CoinListComponent implements OnInit {
     });
   }
 
-  public onSearch(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.searchSubject.next(filterValue);
+  public onSearch(searchTerm: string): void {
+    this.searchSubject.next(searchTerm);
   }
 
   public onSort(

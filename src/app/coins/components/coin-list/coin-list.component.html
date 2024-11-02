@@ -1,9 +1,4 @@
-<div>
-  <input
-    type="text"
-    placeholder="Search by name or symbol"
-    (input)="onSearch($event)" />
-</div>
+<app-input-search (searchChange)="onSearch($event)"></app-input-search>
 
 <table>
   <thead>

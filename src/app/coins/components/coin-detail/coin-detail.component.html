@@ -33,7 +33,7 @@
   <button (click)="goBack()">Back to List</button>
 </div>
 
-<app-modal 
+<app-modal
   *ngIf="isAddCoinModalOpen"
   [coin]="selectedCoin"
   [mode]="isAdding ? 'add' : 'portfolio'"
