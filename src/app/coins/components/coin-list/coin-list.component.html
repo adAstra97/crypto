@@ -44,14 +44,24 @@
             : 'n/a'
         }}
       </td>
-      <td><button (click)="openAddCoinModal($event, coin)">Add</button></td>
+      <td>
+        <button (click)="openAddCoinModal($event, coin)">
+          Add to Portfolio
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
 
 <div class="pagination">
-  <button (click)="onPreviousPage()" [disabled]="isFirstPage">Prev</button>
-  <button (click)="onNextPage()" [disabled]="isLastPage">Next</button>
+  <app-button
+    label="Prev"
+    [disabled]="isFirstPage"
+    (clickEvent)="onPreviousPage()">
+  </app-button>
+
+  <app-button label="Next" [disabled]="isLastPage" (clickEvent)="onNextPage()">
+  </app-button>
 </div>
 
 <app-modal

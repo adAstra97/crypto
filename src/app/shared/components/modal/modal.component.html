@@ -12,10 +12,11 @@
           coin.priceUsd | number: '1.2-2'
         }}
         USD)
-        <button (click)="confirmRemove(coin.id)">Remove</button>
+        <app-button label="Remove" (clickEvent)="confirmRemove(coin.id)">
+        </app-button>
       </li>
     </ul>
-    <button (click)="closeModal()">Close</button>
+    <app-button label="Close" (clickEvent)="closeModal()"></app-button>
   </ng-container>
 
   <ng-template #addCoinTemplate>
@@ -29,7 +30,7 @@
       min="1"
       max="1000" />
     <span>{{ errorText }}</span>
-    <button (click)="confirmAdd()">Add</button>
-    <button (click)="closeModal()">Cancel</button>
+    <app-button label="Add" (clickEvent)="confirmAdd()"> </app-button>
+    <app-button label="Cancel" (clickEvent)="closeModal()"> </app-button>
   </ng-template>
 </div>

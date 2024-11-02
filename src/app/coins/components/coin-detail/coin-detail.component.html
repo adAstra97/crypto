@@ -30,7 +30,9 @@
   </div>
 
   <button (click)="openAddCoinModal($event, coin)">Add to Portfolio</button>
-  <button (click)="goBack()">Back to List</button>
+
+  <app-button label="Back to List" (clickEvent)="goBack()">
+  </app-button>
 </div>
 
 <app-modal
