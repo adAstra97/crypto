@@ -1,4 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+@import './styles/reset';
+@import './styles/variables';
+@import './styles/mixins';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  .wrapper {
+    position: relative;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+
+    @include mobile {
+      max-width: 100%;
+    }
+
+    @include mobile-x {
+      max-width: calc(100% - 40px);
+    }
+
+    @include tablet {
+      max-width: $tablet;
+    }
+
+    @include laptop {
+      max-width: $laptop;
+    }
+
+    @include desktop {
+      max-width: 1150px;
+    }
+
+    @include desktop-xl {
+      max-width: 1600px;
+    }
+  }
+}

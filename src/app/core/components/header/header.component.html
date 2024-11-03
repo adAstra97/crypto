@@ -1,20 +1,25 @@
-<header>
-  <div class="popular-coins">
+<header class="header">
+  <div class="header__popular-coins">
     <ng-container *ngFor="let coin of popularCoins">
       <div class="coin">
-        <span>{{ coin.symbol }}</span>
+        <span>{{ coin.symbol }}:</span>
         <span>{{ coin.priceUsd | number: '1.2-2' }} USD</span>
       </div>
     </ng-container>
   </div>
 
-  <div class="portfolio-value" *ngIf="portfolioValue; else emptyPortfolio">
-    <button (click)="openPortfolioModal()" class="portfolio-button">
+  <div
+    class="header__portfolio portfolio"
+    *ngIf="portfolioValue; else emptyPortfolio">
+    <button (click)="openPortfolioModal()" class="portfolio__button">
       <ng-container *ngIf="portfolioValue">
-        <span>{{ portfolioValue | number: '1.2-2' }} USD</span>
+        <span class="portfolio__value"
+          >Total: {{ portfolioValue | number: '1.2-2' }} USD</span
+        >
       </ng-container>
       <ng-container *ngIf="portfolioDifference">
         <span
+          class="portfolio__difference"
           [ngClass]="{
             positive: portfolioDifference.value >= 0,
             negative: portfolioDifference.value < 0,
@@ -27,7 +32,7 @@
   </div>
 
   <ng-template #emptyPortfolio>
-    <div class="empty-portfolio-message">Portfolio is empty</div>
+    <div class="empty-portfolio-message">Portfolio</div>
   </ng-template>
 </header>
 
