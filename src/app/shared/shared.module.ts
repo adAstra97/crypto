@@ -5,8 +5,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from './components/modal/modal.component';
 import { InputSearchComponent } from './components/input-search/input-search.component';
+import { MatIconModule } from '@angular/material/icon';
 
-const materialModules = [MatProgressSpinnerModule];
+const materialModules = [MatProgressSpinnerModule, MatIconModule];
 
 @NgModule({
   declarations: [ButtonComponent, ModalComponent, InputSearchComponent],

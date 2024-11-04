@@ -16,6 +16,7 @@ button {
   &--remove {
     color: white;
     background-color: $color-red;
+    padding: 5px 7px;
 
     &:hover {
       background-color: $color-dark-red;

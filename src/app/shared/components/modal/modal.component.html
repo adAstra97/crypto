@@ -8,10 +8,13 @@
     <h2>Your Portfolio</h2>
     <ul>
       <li *ngFor="let coin of coins">
-        {{ coin.symbol }}: {{ coin.quantity }} (${{ coin.priceUsd | number: '1.2-4' }} per 1)
+        {{ coin.symbol }}: {{ coin.quantity }} (${{
+          coin.priceUsd | number: '1.2-4'
+        }}
+        per 1)
         <app-button
+          icon="delete_forever"
           cssClass="modal--remove"
-          label="Remove"
           (clickEvent)="confirmRemove(coin.id)">
         </app-button>
       </li>

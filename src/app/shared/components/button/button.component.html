@@ -1,3 +1,8 @@
 <button [type]="type" [disabled]="disabled" [ngClass]="cssClass" (click)="onClick()">
-  {{ label }}
+  <ng-container *ngIf="icon; else labelTemplate">
+    <mat-icon>{{ icon }}</mat-icon>
+  </ng-container>
+  <ng-template #labelTemplate>
+    {{ label }}
+  </ng-template>
 </button>
