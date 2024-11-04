@@ -4,35 +4,45 @@
 
 <div *ngIf="errorMessage" class="error">
   <p>{{ errorMessage }}</p>
+  <app-button
+    cssClass="button--back"
+    label="Back to List"
+    (clickEvent)="goBack()">
+  </app-button>
 </div>
 
-<div *ngIf="!isLoading && !errorMessage">
-  <h1>{{ coin.name | titlecase }} ({{ coin.symbol }})</h1>
-  <img [src]="getIconUrl(coin.symbol)" alt="{{ coin.symbol }}" width="100" />
+<div class="detail" *ngIf="!isLoading && !errorMessage">
+  <app-button
+    cssClass="button--back"
+    label="◄ Back to List"
+    (clickEvent)="goBack()">
+  </app-button>
+  <div class="detail__top">
+    <div class="detail__title">
+      <img [src]="getIconUrl(coin.symbol)" alt="{{ coin.symbol }}" width="30" />
+      <h1>{{ coin.name | titlecase }} ({{ coin.symbol }})</h1>
+    </div>
+    <button class="detail--add" (click)="openAddCoinModal($event, coin)">Add</button>
+  </div>
 
   <p>Rank: {{ coin.rank }}</p>
   <p>Supply: {{ coin.supply | number }}</p>
-  <p>Price (USD): {{ coin.priceUsd | number: '1.2-2' }}</p>
-  <p>Market Cap (USD): {{ coin.marketCapUsd | number: '1.2-2' }}</p>
+  <p>Price (USD): {{ coin.priceUsd | number: '1.2-5' }}</p>
+  <p>Market Cap (USD): {{ coin.marketCapUsd | number: '1.2-5' }}</p>
   <p>Max Supply: {{ coin.maxSupply | number }}</p>
 
   <div class="chart-options">
     <label for="timeRange">Time range:</label>
     <select id="timeRange" (change)="onTimeRangeChange($event)">
-      <option value="h1">1 Hour</option>
-      <option value="h12">12 Hours</option>
-      <option value="d1" selected>24 Hours</option>
+      <option value="1h">1 Hour</option>
+      <option value="12h">12 Hours</option>
+      <option value="24h" selected>24 Hours</option>
     </select>
   </div>
 
   <div class="chart">
     <canvas #coinChartCanvas></canvas>
   </div>
-
-  <button (click)="openAddCoinModal($event, coin)">Add to Portfolio</button>
-
-  <app-button label="Back to List" (clickEvent)="goBack()">
-  </app-button>
 </div>
 
 <app-modal

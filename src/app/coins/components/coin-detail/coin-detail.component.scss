@@ -1,0 +1,78 @@
+@import "../../../../styles/_variables.scss";
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50dvh;
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+.detail {
+  padding: 20px 0;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  &--add {
+    background-color: $color-blue;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $color-dark-blue;
+    }
+  }
+
+  p {
+    color: $color-black;
+    margin: 5px 0;
+  }
+
+  .chart-options {
+    margin-bottom: 20px;
+
+    select {
+      margin-left: 10px;
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid $color-blue;
+
+      &:focus {
+        outline: none;
+        border-color: $color-dark-blue;
+      }
+    }
+  }
+
+  .chart {
+    margin-bottom: 20px;
+
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+  }
+}
