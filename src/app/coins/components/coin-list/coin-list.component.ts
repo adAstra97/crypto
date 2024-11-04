@@ -27,6 +27,7 @@ export class CoinListComponent implements OnInit, OnDestroy {
   public sortBy?: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr';
   public sortDirection: 'asc' | 'desc' = 'asc';
 
+  public isLoading = true;
   public isAdding = true;
   public isAddCoinModalOpen = false;
   public selectedCoin?: ICoin;
@@ -60,6 +61,8 @@ export class CoinListComponent implements OnInit, OnDestroy {
   }
 
   private loadData(): void {
+    this.isLoading = true;
+
     this.store.dispatch(
       CoinsActions.loadCoins({
         limit: this.pageSize,
@@ -69,6 +72,14 @@ export class CoinListComponent implements OnInit, OnDestroy {
         sortDirection: this.sortDirection,
       })
     );
+
+    const coinsSubscription = this.coins$.subscribe(coins => {
+      if (coins.length > 0) {
+        setTimeout(() => (this.isLoading = false), 500);
+      }
+    });
+
+    this.subscriptions.push(coinsSubscription);
   }
 
   private loadTotalCoins(value?: string): void {
@@ -76,6 +87,7 @@ export class CoinListComponent implements OnInit, OnDestroy {
       .getTotalCoins(value)
       .subscribe(total => {
         this.totalCoins = total.length;
+        this.isLoading = false;
       });
 
     this.subscriptions.push(totalCoinsSubscription);

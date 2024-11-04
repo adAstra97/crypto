@@ -17,6 +17,10 @@ export class ModalComponent {
   public errorText = '';
   public quantity = 1;
 
+  public parsePrice(price: string | undefined): number {
+    return price ? +price : 0;
+  }
+
   public confirmRemove(coinId: string): void {
     this.removeCoin.emit(coinId);
   }

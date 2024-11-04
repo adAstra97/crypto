@@ -21,7 +21,11 @@
 
   <ng-template #addCoinTemplate>
     <h2>Add {{ coin?.symbol }} to Portfolio</h2>
-    <p>Current Price: {{ coin?.priceUsd | number: '1.2-2' }} USD</p>
+    <p>Current Price: {{ parsePrice(coin?.priceUsd) }} USD</p>
+    <p>
+      Total Price:
+      {{ parsePrice(coin?.priceUsd) * quantity }} USD
+    </p>
     <label for="quantity">Quantity</label>
     <input
       type="number"
