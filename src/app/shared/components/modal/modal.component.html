@@ -1,31 +1,30 @@
 <div
-  class="modal-overlay"
+  class="overlay"
   (click)="closeModal()"
   (keydown.enter)="closeModal()"
   tabindex="0"></div>
-<div class="modal-content">
+<div class="modal">
   <ng-container *ngIf="mode === 'portfolio'; else addCoinTemplate">
     <h2>Your Portfolio</h2>
     <ul>
       <li *ngFor="let coin of coins">
-        {{ coin.symbol }}: {{ coin.quantity }} ({{
-          coin.priceUsd | number: '1.2-2'
-        }}
-        USD)
-        <app-button label="Remove" (clickEvent)="confirmRemove(coin.id)">
+        {{ coin.symbol }}: {{ coin.quantity }} (${{ coin.priceUsd | number: '1.2-4' }} per 1)
+        <app-button
+          cssClass="modal--remove"
+          label="Remove"
+          (clickEvent)="confirmRemove(coin.id)">
         </app-button>
       </li>
     </ul>
-    <app-button label="Close" (clickEvent)="closeModal()"></app-button>
+    <app-button
+      cssClass="modal--cancel"
+      label="Close"
+      (clickEvent)="closeModal()"></app-button>
   </ng-container>
 
   <ng-template #addCoinTemplate>
     <h2>Add {{ coin?.symbol }} to Portfolio</h2>
     <p>Current Price: {{ parsePrice(coin?.priceUsd) }} USD</p>
-    <p>
-      Total Price:
-      {{ parsePrice(coin?.priceUsd) * quantity }} USD
-    </p>
     <label for="quantity">Quantity</label>
     <input
       type="number"
@@ -33,8 +32,16 @@
       [(ngModel)]="quantity"
       min="1"
       max="1000" />
-    <span>{{ errorText }}</span>
-    <app-button label="Add" (clickEvent)="confirmAdd()"> </app-button>
-    <app-button label="Cancel" (clickEvent)="closeModal()"> </app-button>
+    <span class="modal__error">{{ errorText }}</span>
+    <p class="modal__sum">{{ parsePrice(coin?.priceUsd) * quantity }} USD</p>
+    <div class="modal__btns">
+      <app-button cssClass="modal--add" label="Add" (clickEvent)="confirmAdd()">
+      </app-button>
+      <app-button
+        cssClass="modal--cancel"
+        label="Cancel"
+        (clickEvent)="closeModal()">
+      </app-button>
+    </div>
   </ng-template>
 </div>

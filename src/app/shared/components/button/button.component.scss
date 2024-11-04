@@ -7,11 +7,44 @@ button {
   cursor: pointer;
 }
 
+.modal {
+  &--add,
+  &--cancel {
+    width: 72px;
+  }
+
+  &--remove {
+    color: white;
+    background-color: $color-red;
+
+    &:hover {
+      background-color: $color-dark-red;
+    }
+  }
+
+  &--add {
+    background-color: $color-blue;
+    color: white;
+
+    &:hover {
+      background-color: $color-dark-blue;
+    }
+  }
+
+  &--cancel {
+    color: $color-grey;
+    background-color: transparent;
+
+    &:hover {
+      color: $color-dark-blue;
+    }
+  }
+}
+
 .button-pagination {
   background-color: transparent;
   color: $color-grey;
   font-size: 16px;
-  text-transform: uppercase;
   padding: 5px;
   border-radius: 0;
   cursor: pointer;
