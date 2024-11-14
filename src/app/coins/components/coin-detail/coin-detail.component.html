@@ -22,7 +22,9 @@
       <img [src]="getIconUrl(coin.symbol)" alt="{{ coin.symbol }}" width="30" />
       <h1>{{ coin.name | titlecase }} ({{ coin.symbol }})</h1>
     </div>
-    <button class="detail--add" (click)="openAddCoinModal($event, coin)">Add</button>
+    <button class="detail--add" (click)="openAddCoinModal($event, coin)">
+      Add
+    </button>
   </div>
 
   <p>Rank: {{ coin.rank }}</p>

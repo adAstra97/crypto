@@ -3,81 +3,85 @@
 <div *ngIf="isLoading" class="spinner">
   <mat-spinner></mat-spinner>
 </div>
-<div *ngIf="!isLoading && (coins$ | async)?.length === 0">No coins have found</div>
-<div *ngIf="!isLoading && (coins$ | async)!.length > 0">
-  <div class="table-container">
-    <table class="coins">
-      <thead>
-        <tr>
-          <th>Symbol</th>
-          <th>Logo</th>
-          <th class="coins--sort" (click)="onSort('priceUsd')">
-            Price (USD)
-            <span *ngIf="sortBy === 'priceUsd'">
-              {{ sortDirection === 'asc' ? '⬇' : '⬆' }}
-            </span>
-          </th>
-          <th class="coins--sort" (click)="onSort('marketCapUsd')">
-            Market Cap (USD)
-            <span *ngIf="sortBy === 'marketCapUsd'">
-              {{ sortDirection === 'asc' ? '⬇' : '⬆' }}
-            </span>
-          </th>
-          <th class="coins--sort" (click)="onSort('changePercent24Hr')">
-            Change (24h)
-            <span *ngIf="sortBy === 'changePercent24Hr'">
-              {{ sortDirection === 'asc' ? '⬇' : '⬆' }}
-            </span>
-          </th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let coin of coins$ | async"
-          (click)="navigateToCoin(coin.id)">
-          <td>{{ coin.symbol }}</td>
-          <td>
-            <img
-              [src]="getIconUrl(coin.symbol)"
-              alt="{{ coin.symbol }}"
-              width="32" />
-          </td>
-          <td>{{ formatPrice(coin.priceUsd) }}</td>
-          <td>{{ formatPrice(coin.marketCapUsd) }}</td>
-          <td>
-            {{
-              coin.changePercent24Hr !== null
-                ? (coin.changePercent24Hr | number: '1.2-2') + '%'
-                : 'n/a'
-            }}
-          </td>
-          <td>
-            <button class="coins--add" (click)="openAddCoinModal($event, coin)">
-              Add
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<ng-container *ngIf="!isLoading && (coins$ | async) as coins">
+  <div *ngIf="coins.length === 0">No coins have found</div>
+  <div *ngIf="coins.length > 0">
+    <div class="table-container">
+      <table class="coins">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Logo</th>
+            <th class="coins--sort" (click)="onSort('priceUsd')">
+              Price (USD)
+              <span *ngIf="sortBy === 'priceUsd'">
+                {{ sortDirection === 'asc' ? '⬇' : '⬆' }}
+              </span>
+            </th>
+            <th class="coins--sort" (click)="onSort('marketCapUsd')">
+              Market Cap (USD)
+              <span *ngIf="sortBy === 'marketCapUsd'">
+                {{ sortDirection === 'asc' ? '⬇' : '⬆' }}
+              </span>
+            </th>
+            <th class="coins--sort" (click)="onSort('changePercent24Hr')">
+              Change (24h)
+              <span *ngIf="sortBy === 'changePercent24Hr'">
+                {{ sortDirection === 'asc' ? '⬇' : '⬆' }}
+              </span>
+            </th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let coin of coins$ | async"
+            (click)="navigateToCoin(coin.id)">
+            <td>{{ coin.symbol }}</td>
+            <td>
+              <img
+                [src]="getIconUrl(coin.symbol)"
+                alt="{{ coin.symbol }}"
+                width="32" />
+            </td>
+            <td>{{ formatPrice(coin.priceUsd) }}</td>
+            <td>{{ formatPrice(coin.marketCapUsd) }}</td>
+            <td>
+              {{
+                coin.changePercent24Hr !== null
+                  ? (coin.changePercent24Hr | number: '1.2-2') + '%'
+                  : 'n/a'
+              }}
+            </td>
+            <td>
+              <button
+                class="coins--add"
+                (click)="openAddCoinModal($event, coin)">
+                Add
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="pagination">
-    <app-button
-      label="◄ Prev"
-      cssClass="button-pagination"
-      [disabled]="isFirstPage"
-      (clickEvent)="onPreviousPage()">
-    </app-button>
+    <div class="pagination">
+      <app-button
+        label="◄ Prev"
+        cssClass="button--pagination"
+        [disabled]="isFirstPage"
+        (clickEvent)="onPreviousPage()">
+      </app-button>
 
-    <app-button
-      label="Next ►"
-      cssClass="button-pagination"
-      [disabled]="isLastPage"
-      (clickEvent)="onNextPage()">
-    </app-button>
+      <app-button
+        label="Next ►"
+        cssClass="button--pagination"
+        [disabled]="isLastPage"
+        (clickEvent)="onNextPage()">
+      </app-button>
+    </div>
   </div>
-</div>
+</ng-container>
 
 <app-modal
   *ngIf="isAddCoinModalOpen"

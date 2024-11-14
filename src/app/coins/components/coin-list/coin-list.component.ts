@@ -74,7 +74,7 @@ export class CoinListComponent implements OnInit, OnDestroy {
     );
 
     const coinsSubscription = this.coins$.subscribe(coins => {
-      if (coins.length > 0) {
+      if (coins && coins.length > 0) {
         setTimeout(() => (this.isLoading = false), 500);
       }
     });

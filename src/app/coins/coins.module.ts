@@ -9,7 +9,12 @@ import { CoinsPageComponent } from './pages/coins-page/coins-page.component';
 import { DetailPageComponent } from './pages/detail-page/detail-page.component';
 
 @NgModule({
-  declarations: [CoinListComponent, CoinDetailComponent, CoinsPageComponent, DetailPageComponent],
+  declarations: [
+    CoinListComponent,
+    CoinDetailComponent,
+    CoinsPageComponent,
+    DetailPageComponent,
+  ],
   imports: [CommonModule, FormsModule, SharedModule, CoinsRoutingModule],
 })
 export class CoinsModule {}
