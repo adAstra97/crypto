@@ -9,7 +9,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "storybook": "ng run crypto:storybook",
-    "build-storybook": "ng run crypto:build-storybook"
+    "build-storybook": "ng run crypto:build-storybook",
+    "e2e": "npx playwright test",
+    "e2e:report": "npx playwright show-report"
   },
   "private": true,
   "dependencies": {
@@ -38,6 +40,7 @@
     "@angular/cli": "^18.0.6",
     "@angular/compiler-cli": "^18.0.0",
     "@chromatic-com/storybook": "^3.2.2",
+    "@playwright/test": "^1.48.2",
     "@storybook/addon-essentials": "^8.4.2",
     "@storybook/addon-interactions": "^8.4.2",
     "@storybook/addon-onboarding": "^8.4.2",
@@ -45,6 +48,7 @@
     "@storybook/blocks": "^8.4.2",
     "@storybook/test": "^8.4.2",
     "@types/jasmine": "~5.1.0",
+    "@types/node": "^22.9.0",
     "angular-eslint": "18.4.0",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
