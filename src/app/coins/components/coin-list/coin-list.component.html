@@ -3,7 +3,7 @@
 <div *ngIf="isLoading" class="spinner">
   <mat-spinner></mat-spinner>
 </div>
-<ng-container *ngIf="!isLoading && (coins$ | async) as coins">
+<ng-container *ngIf="!isLoading && coins.length > 0">
   <div *ngIf="coins.length === 0">No coins have found</div>
   <div *ngIf="coins.length > 0">
     <div class="table-container">
@@ -34,9 +34,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let coin of coins$ | async"
-            (click)="navigateToCoin(coin.id)">
+          <tr *ngFor="let coin of coins" (click)="navigateToCoin(coin.id)">
             <td>{{ coin.symbol }}</td>
             <td>
               <img

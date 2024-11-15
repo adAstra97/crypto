@@ -30,13 +30,18 @@
     cursor: pointer;
     min-width: 135px;
     transition: 0.2s;
+    position: relative;
 
     &:hover {
       background-color: #e0e0e0;
     }
 
     span {
+      position: absolute;
+      top: 50%;
+      right: 0;
       font-weight: 700;
+      transform: translate(-12px, -50%);
     }
   }
 

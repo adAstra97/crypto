@@ -19,6 +19,8 @@ export class CoinListComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   public coins$ = this.store.select(fromCoinsSelectors.selectAllCoins);
+  public coins: ICoin[] = []; // Хранение текущего набора данных
+
   public searchQuery = '';
   public currentOffset = 0;
   public pageSize = 10;
@@ -52,8 +54,12 @@ export class CoinListComponent implements OnInit, OnDestroy {
         this.loadTotalCoins(searchQuery);
       });
 
-    this.subscriptions.push(this.coinService.getPopularCoins().subscribe());
-    this.subscriptions.push(searchSubscription);
+    const coinsSubscription = this.coins$.subscribe(coins => {
+      this.coins = coins || [];
+      this.isLoading = false;
+    });
+
+    this.subscriptions.push(searchSubscription, coinsSubscription);
   }
 
   ngOnDestroy(): void {
@@ -72,14 +78,6 @@ export class CoinListComponent implements OnInit, OnDestroy {
         sortDirection: this.sortDirection,
       })
     );
-
-    const coinsSubscription = this.coins$.subscribe(coins => {
-      if (coins && coins.length > 0) {
-        setTimeout(() => (this.isLoading = false), 500);
-      }
-    });
-
-    this.subscriptions.push(coinsSubscription);
   }
 
   private loadTotalCoins(value?: string): void {
@@ -87,14 +85,9 @@ export class CoinListComponent implements OnInit, OnDestroy {
       .getTotalCoins(value)
       .subscribe(total => {
         this.totalCoins = total.length;
-        this.isLoading = false;
       });
 
     this.subscriptions.push(totalCoinsSubscription);
-  }
-
-  public onSearch(searchTerm: string): void {
-    this.searchSubject.next(searchTerm);
   }
 
   public onSort(
@@ -106,7 +99,33 @@ export class CoinListComponent implements OnInit, OnDestroy {
       this.sortBy = field;
       this.sortDirection = 'asc';
     }
-    this.loadData();
+
+    this.coins = [...this.coins].sort((a, b) => {
+      const valueA = parseFloat(a[field]);
+      const valueB = parseFloat(b[field]);
+
+      if (valueA < valueB) return this.sortDirection === 'asc' ? -1 : 1;
+      if (valueA > valueB) return this.sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  public onSearch(searchTerm: string): void {
+    this.searchSubject.next(searchTerm);
+  }
+
+  public onPreviousPage(): void {
+    if (!this.isFirstPage) {
+      this.currentOffset -= this.pageSize;
+      this.loadData();
+    }
+  }
+
+  public onNextPage(): void {
+    if (!this.isLastPage) {
+      this.currentOffset += this.pageSize;
+      this.loadData();
+    }
   }
 
   public getIconUrl(symbol: string): string {
@@ -132,20 +151,6 @@ export class CoinListComponent implements OnInit, OnDestroy {
 
   public get isLastPage(): boolean {
     return this.currentOffset + this.pageSize >= this.totalCoins;
-  }
-
-  public onPreviousPage(): void {
-    if (!this.isFirstPage) {
-      this.currentOffset -= this.pageSize;
-      this.loadData();
-    }
-  }
-
-  public onNextPage(): void {
-    if (!this.isLastPage) {
-      this.currentOffset += this.pageSize;
-      this.loadData();
-    }
   }
 
   public openAddCoinModal(event: MouseEvent, coin: ICoin): void {
