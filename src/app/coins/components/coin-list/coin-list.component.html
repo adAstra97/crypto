@@ -5,8 +5,8 @@
 <div *ngIf="isLoading" class="spinner">
   <mat-spinner></mat-spinner>
 </div>
-<ng-container *ngIf="!isLoading && coins.length > 0">
-  <div *ngIf="coins.length === 0">No coins have found</div>
+<ng-container *ngIf="!isLoading">
+  <div class="message" *ngIf="coins.length === 0 && totalCoins === 0 && searchQuery.length > 0">No coins have found</div>
   <div *ngIf="coins.length > 0">
     <div class="table-container">
       <table class="coins">

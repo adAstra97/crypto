@@ -47,7 +47,6 @@ export class CoinListComponent implements OnInit, OnDestroy {
     if (cachedCoins) {
       this.coins = cachedCoins;
       this.getSavedState();
-      this.isLoading = false;
     } else {
       this.loadData();
       this.loadTotalCoins();
@@ -67,6 +66,7 @@ export class CoinListComponent implements OnInit, OnDestroy {
       this.coins = coins || [];
       localStorage.setItem('offset', JSON.stringify(this.currentOffset));
       localStorage.setItem('pageSize', JSON.stringify(this.pageSize));
+      this.coinService.setCoinsCache(this.coins);
       this.isLoading = false;
     });
 
@@ -96,12 +96,6 @@ export class CoinListComponent implements OnInit, OnDestroy {
         sortDirection: this.sortDirection,
       })
     );
-
-    this.coins$.subscribe(coins => {
-      this.coins = coins || [];
-      this.coinService.setCoinsCache(this.coins);
-      this.isLoading = false;
-    });
   }
 
   private loadTotalCoins(value?: string): void {
@@ -136,6 +130,7 @@ export class CoinListComponent implements OnInit, OnDestroy {
   }
 
   public onSearch(searchTerm: string): void {
+    this.isLoading = true;
     this.searchSubject.next(searchTerm);
   }
 

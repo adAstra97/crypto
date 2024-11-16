@@ -7,6 +7,13 @@
   height: 50dvh;
 }
 
+.message{
+  height: 50dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .table-container {
   width: 100%;
   overflow-x: auto;
