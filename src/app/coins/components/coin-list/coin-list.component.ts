@@ -19,7 +19,7 @@ export class CoinListComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   public coins$ = this.store.select(fromCoinsSelectors.selectAllCoins);
-  public coins: ICoin[] = []; // Хранение текущего набора данных
+  public coins: ICoin[] = [];
 
   public searchQuery = '';
   public currentOffset = 0;
@@ -42,20 +42,31 @@ export class CoinListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
-    this.loadTotalCoins();
+    const cachedCoins = this.coinService.getCoinsCache();
+
+    if (cachedCoins) {
+      this.coins = cachedCoins;
+      this.getSavedState();
+      this.isLoading = false;
+    } else {
+      this.loadData();
+      this.loadTotalCoins();
+    }
 
     const searchSubscription = this.searchSubject
       .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(searchQuery => {
         this.searchQuery = searchQuery;
         this.currentOffset = 0;
+        localStorage.setItem('searchQuery', searchQuery);
         this.loadData();
         this.loadTotalCoins(searchQuery);
       });
 
     const coinsSubscription = this.coins$.subscribe(coins => {
       this.coins = coins || [];
+      localStorage.setItem('offset', JSON.stringify(this.currentOffset));
+      localStorage.setItem('pageSize', JSON.stringify(this.pageSize));
       this.isLoading = false;
     });
 
@@ -64,6 +75,13 @@ export class CoinListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  private getSavedState(): void {
+    this.currentOffset = +localStorage.getItem('offset')!;
+    this.totalCoins = +localStorage.getItem('total')!;
+    this.pageSize = +localStorage.getItem('pageSize')!;
+    this.searchQuery = localStorage.getItem('searchQuery')!;
   }
 
   private loadData(): void {
@@ -78,6 +96,12 @@ export class CoinListComponent implements OnInit, OnDestroy {
         sortDirection: this.sortDirection,
       })
     );
+
+    this.coins$.subscribe(coins => {
+      this.coins = coins || [];
+      this.coinService.setCoinsCache(this.coins);
+      this.isLoading = false;
+    });
   }
 
   private loadTotalCoins(value?: string): void {
@@ -85,6 +109,7 @@ export class CoinListComponent implements OnInit, OnDestroy {
       .getTotalCoins(value)
       .subscribe(total => {
         this.totalCoins = total.length;
+        localStorage.setItem('total', JSON.stringify(this.totalCoins));
       });
 
     this.subscriptions.push(totalCoinsSubscription);

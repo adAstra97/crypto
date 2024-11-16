@@ -12,13 +12,7 @@ export class CoinsEffects {
       ofType(CoinsActions.loadCoins),
       mergeMap(action =>
         this.coinService
-          .getCoins(
-            action.limit,
-            action.offset,
-            action.search,
-            action.sortBy,
-            action.sortDirection
-          )
+          .getCoins(action.limit, action.offset, action.search)
           .pipe(
             map(data => CoinsActions.loadCoinsSuccess({ coins: data })),
             catchError(error => of(CoinsActions.loadCoinsFailure({ error })))

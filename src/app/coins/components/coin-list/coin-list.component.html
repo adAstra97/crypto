@@ -1,4 +1,6 @@
-<app-input-search (searchChange)="onSearch($event)"></app-input-search>
+<app-input-search
+  [searchTerm]="searchQuery"
+  (searchChange)="onSearch($event)"></app-input-search>
 
 <div *ngIf="isLoading" class="spinner">
   <mat-spinner></mat-spinner>

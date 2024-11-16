@@ -16,34 +16,30 @@ export class CoinService {
   private readonly API_URL = 'https://api.coincap.io/v2/assets';
 
   private popularCoinsSubject = new BehaviorSubject<ICoin[]>([]);
+  private coinsCache = new BehaviorSubject<ICoin[] | null>(null);
+  public coinsCache$ = this.coinsCache.asObservable();
   public popularCoins$ = this.popularCoinsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  public getCoins(
-    limit: number,
-    offset: number,
-    search?: string,
-    sortBy?: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr',
-    sortDirection?: 'asc' | 'desc'
-  ) {
+  public setCoinsCache(coins: ICoin[]): void {
+    this.coinsCache.next(coins);
+  }
+
+  public getCoinsCache(): ICoin[] | null {
+    return this.coinsCache.value;
+  }
+
+  public getCoins(limit: number, offset: number, search?: string) {
     let queryParams = `limit=${limit}&offset=${offset}`;
 
     if (search) {
       queryParams += `&search=${search}`;
     }
 
-    return this.http.get<ICoinResponse>(`${this.API_URL}?${queryParams}`).pipe(
-      map(response => {
-        let coins = response.data;
-
-        if (sortBy && sortDirection) {
-          coins = this.sortCoins(coins, sortBy, sortDirection);
-        }
-
-        return coins;
-      })
-    );
+    return this.http
+      .get<ICoinResponse>(`${this.API_URL}?${queryParams}`)
+      .pipe(map(response => response.data));
   }
 
   public getTotalCoins(search?: string): Observable<ICoin[]> {
@@ -83,22 +79,5 @@ export class CoinService {
         return coins;
       })
     );
-  }
-
-  private sortCoins(
-    coins: ICoin[],
-    sortBy: 'priceUsd' | 'marketCapUsd' | 'changePercent24Hr',
-    sortDirection: 'asc' | 'desc'
-  ): ICoin[] {
-    return coins.sort((a, b) => {
-      const valueA = parseFloat(a[sortBy]);
-      const valueB = parseFloat(b[sortBy]);
-
-      if (sortDirection === 'asc') {
-        return valueA > valueB ? 1 : -1;
-      } else {
-        return valueA < valueB ? 1 : -1;
-      }
-    });
   }
 }
