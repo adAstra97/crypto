@@ -157,6 +157,11 @@ export class CoinListComponent implements OnInit, OnDestroy {
     return `https://assets.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png`;
   }
 
+  public onImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = '/no-image.png';
+  }
+
   public formatPrice(price: string): string {
     const priceToDigit = +price;
     const fixedDigit = priceToDigit.toFixed(2);

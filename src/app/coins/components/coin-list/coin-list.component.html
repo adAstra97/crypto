@@ -42,7 +42,8 @@
               <img
                 [src]="getIconUrl(coin.symbol)"
                 alt="{{ coin.symbol }}"
-                width="32" />
+                width="32"
+                (error)="onImageError($event)" />
             </td>
             <td>{{ formatPrice(coin.priceUsd) }}</td>
             <td>{{ formatPrice(coin.marketCapUsd) }}</td>
