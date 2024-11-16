@@ -53,6 +53,8 @@
     margin-bottom: 10px;
     gap: 10px;
     min-height: 100px;
+    max-height: 330px;
+    overflow-y: auto;
   }
 
   li {
